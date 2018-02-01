@@ -12,6 +12,7 @@ import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
+import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
 
 public class DemoConfig extends JFinalConfig {
@@ -27,6 +28,10 @@ public class DemoConfig extends JFinalConfig {
 		//第一次使用use加载的配置将成为主配置，可以通过PropKit.get(...)直接取值
 		/*PropKit.use("a_little_config.txt");
 		me.setDevMode(PropKit.getBoolean("devMode"));*/
+		
+		me.setBaseUploadPath("/upload");	//文件上传基础路径
+		me.setBaseDownloadPath("/download");	//文件下载基础路径
+		me.setViewType(ViewType.JFINAL_TEMPLATE);//设置渲染视图（默认：JFINAL_TEMPLATE）
 		
 	}
 
