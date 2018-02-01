@@ -89,6 +89,16 @@ public class DemoConfig extends JFinalConfig {
 		// 此方法用来配置全局拦截器,拦截所有action请求，除非使用@clear在Controller中清除
 		me.add(new AuthInterceptor());	//全局Global配置粒度（Global，Inject，Class，Method）
 		
+		
+		// 添加控制层全局拦截器
+		me.addGlobalActionInterceptor(new GlobalActionInterceptor());
+		
+		// 添加业务层全局拦截器
+		me.addGlobalServiceInterceptor(new GlobalServiceInterceptor());
+
+		// 为兼容老版本保留的方法，功能与addGlobalActionInterceptor完全一样
+		me.add(new GlobalActionInterceptor());
+	
 	}
 
 	@Override
