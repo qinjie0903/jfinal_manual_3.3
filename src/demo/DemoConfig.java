@@ -7,9 +7,20 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
+import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
+import com.jfinal.plugin.activerecord.dialect.OracleDialect;
+import com.jfinal.plugin.activerecord.dialect.PostgreSqlDialect;
+import com.jfinal.plugin.activerecord.dialect.SqlServerDialect;
+import com.jfinal.plugin.activerecord.dialect.Sqlite3Dialect;
+import com.jfinal.plugin.activerecord.tx.TxByActionKeyRegex;
+import com.jfinal.plugin.activerecord.tx.TxByActionKeys;
+import com.jfinal.plugin.activerecord.tx.TxByMethodRegex;
+import com.jfinal.plugin.activerecord.tx.TxByMethods;
 import com.jfinal.plugin.druid.DruidPlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.render.ViewType;
@@ -65,8 +76,32 @@ public class DemoConfig extends JFinalConfig {
 		DruidPlugin dp = new DruidPlugin(getProperty("jdbcUrl"), getProperty("user"), getProperty("password"));
 		me.add(dp);
 		ActiveRecordPlugin arp = new ActiveRecordPlugin(dp);
+		arp.setBaseSqlTemplatePath(PathKit.getRootClassPath());//设置sql文件存放的基础路径
+		arp.addSqlTemplate("demo.sql");//添加外部sql模板
+		
+		// 实现热加载 (如下2种方法)，如果不配置则默认configConstant中的me.setDevMode(true);
+		arp.setDevMode(true);
+		arp.getEngine().setDevMode(true);
+		
+		//_MappingKit.mapping(arp);
 		me.add(arp);
+		// 配置Postgresql方言
+		/*arp.setDialect(new PostgreSqlDialect());
+		arp.setDialect(new MysqlDialect());
+		arp.setDialect(new SqlServerDialect());
+		arp.setDialect(new Sqlite3Dialect());
+		arp.setDialect(new AnsiSqlDialect());
+		arp.setDialect(new OracleDialect());*/
 		arp.addMapping("user", User.class);
+		
+		// 多数据源的配置仅仅是如下第二个参数指定一次复合主键名称
+		arp.addMapping("user_role", "userId,roleId", UserRole.class);
+		
+		// 同时指定复合主键值即可查找记录
+		UserRole.dao.findById(123,456);
+		
+		// 同时指定复合主键值即可删除记录
+		UserRole.dao.deleteById(123,456);
 		
 		
 		//PropKit
@@ -82,6 +117,16 @@ public class DemoConfig extends JFinalConfig {
 		me.add(dp2);
 		PropKit.useless("db_config.txt");//清除缓存配置内容
 		
+		//druid数据源插件
+		DruidPlugin dp3 = new DruidPlugin("jdbc:mysql://localhost/db_name", "username", "password");
+		me.add(dp3);
+		
+		//ActiveRecord插件
+		ActiveRecordPlugin arp3 = new ActiveRecordPlugin(dp3);
+		me.add(arp3);
+		arp3.addMapping("user", User.class);	//默认主键：id
+		arp3.addMapping("article", "article_id", Article.class); //自定义主键：article_id
+				
 	}
 
 	@Override
@@ -98,7 +143,12 @@ public class DemoConfig extends JFinalConfig {
 
 		// 为兼容老版本保留的方法，功能与addGlobalActionInterceptor完全一样
 		me.add(new GlobalActionInterceptor());
-	
+		
+		// 对actionKeys，actionKey正则，actionMethods，actionMethod正则声明事务
+		me.add(new TxByMethodRegex("(.*save.*|.*update.*)"));
+		me.add(new TxByMethods("save","update"));
+		me.add(new TxByActionKeyRegex("/trans.*"));
+		me.add(new TxByActionKeys("/tx/save","/tx/update"));
 	}
 
 	@Override
