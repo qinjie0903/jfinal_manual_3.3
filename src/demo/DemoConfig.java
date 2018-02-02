@@ -7,6 +7,7 @@ import com.jfinal.config.Interceptors;
 import com.jfinal.config.JFinalConfig;
 import com.jfinal.config.Plugins;
 import com.jfinal.config.Routes;
+import com.jfinal.i18n.I18nInterceptor;
 import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
@@ -45,6 +46,10 @@ public class DemoConfig extends JFinalConfig {
 		me.setBaseUploadPath("/upload");	//文件上传基础路径
 		me.setBaseDownloadPath("/download");	//文件下载基础路径
 		me.setViewType(ViewType.JFINAL_TEMPLATE);//设置渲染视图（默认：JFINAL_TEMPLATE）
+		
+		// 配置资源文件默认i18n
+		me.setI18nDefaultBaseName("i18n");
+		
 		
 	}
 
@@ -154,6 +159,12 @@ public class DemoConfig extends JFinalConfig {
 		me.add(new TxByMethods("save","update"));
 		me.add(new TxByActionKeyRegex("/trans.*"));
 		me.add(new TxByActionKeys("/tx/save","/tx/update"));
+		
+		
+		// 国际化
+		// 先将I18nInterceptor配置成全局拦截器
+		me.add(new I18nInterceptor());
+	
 	}
 
 	@Override

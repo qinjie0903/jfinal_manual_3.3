@@ -21,3 +21,10 @@ JFinal3.3官方手册学习记录
 第九章 Cron4jPlugin
 
 第十章 Validator
+
+第十一章 国际化
+
+
+
+
+

@@ -2,3 +2,5 @@
 /sql/
 /ehcache.xml
 /cron4jConfig.txt
+/i18n_en_US.properties
+/i18n_zh_CN.properties
