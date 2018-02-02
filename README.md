@@ -24,6 +24,9 @@ JFinal3.3官方手册学习记录
 
 第十一章 国际化
 
+第十二章 JFinal架构和扩展
+Jfinal五大部分【Handler Interceptor Controller Render Plugin】
+
 
 
 
