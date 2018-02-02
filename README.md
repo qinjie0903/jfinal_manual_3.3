@@ -17,3 +17,5 @@ JFinal3.3官方手册学习记录
 第七章 EhCachePlugin
 
 第八章 RedisPlugin
+
+第九章 Cron4jPlugin
