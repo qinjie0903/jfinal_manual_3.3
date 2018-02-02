@@ -13,3 +13,5 @@ JFinal3.3官方手册学习记录
 第五章 ActiveRecord
 
 第六章 Template Engine 
+
+第七章 EhCachePlugin

@@ -11,6 +11,7 @@ import com.jfinal.kit.PathKit;
 import com.jfinal.kit.Prop;
 import com.jfinal.kit.PropKit;
 import com.jfinal.plugin.activerecord.ActiveRecordPlugin;
+import com.jfinal.plugin.activerecord.cache.EhCache;
 import com.jfinal.plugin.activerecord.dialect.AnsiSqlDialect;
 import com.jfinal.plugin.activerecord.dialect.MysqlDialect;
 import com.jfinal.plugin.activerecord.dialect.OracleDialect;
@@ -22,6 +23,7 @@ import com.jfinal.plugin.activerecord.tx.TxByActionKeys;
 import com.jfinal.plugin.activerecord.tx.TxByMethodRegex;
 import com.jfinal.plugin.activerecord.tx.TxByMethods;
 import com.jfinal.plugin.druid.DruidPlugin;
+import com.jfinal.plugin.ehcache.EhCachePlugin;
 import com.jfinal.plugin.redis.RedisPlugin;
 import com.jfinal.render.ViewType;
 import com.jfinal.template.Engine;
@@ -127,6 +129,9 @@ public class DemoConfig extends JFinalConfig {
 		arp3.addMapping("user", User.class);	//默认主键：id
 		arp3.addMapping("article", "article_id", Article.class); //自定义主键：article_id
 				
+		me.add(new EhCachePlugin());
+		
+		
 	}
 
 	@Override
